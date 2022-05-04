@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "lib": ["ES5", "ES6", "ES2018", "ESNext.AsyncIterable"],
+    "target": "ES6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "strict": true,
+    "strictNullChecks": true,
+    "alwaysStrict": true,
+    "esModuleInterop": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "paths": {
+      "@config/*": ["src/config/*"],
+      "@migrations/*": ["src/database/migrations/*"],
+      "@subscribers/*": ["src/database/subscribers/*"],
+      "@seeds/*": ["src/database/seeds/*"],
+      "@factories/*": ["src/database/factories/*"],
+      "@entities/*": ["src/entities/*"],
+      "@inputs/*": ["src/inputs/*"],
+      "@repositories/*": ["src/repositories/*"],
+      "@resolvers/*": ["src/resolvers/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"]
+    }
+  }
+}
