@@ -15,7 +15,8 @@
     "schema:sync": "yarn run typeorm schema:sync",
     "typeorm-seeding": "ts-node -r tsconfig-paths/register ./node_modules/typeorm-seeding/dist/cli.js",
     "seed:config": "yarn run typeorm-seeding config",
-    "seed": "yarn run typeorm-seeding seed"
+    "seed": "yarn run typeorm-seeding seed",
+    "db:reset": "yarn schema:drop && yarn schema:sync && yarn seed"
   },
   "dependencies": {
     "apollo-server-core": "^3.6.7",
