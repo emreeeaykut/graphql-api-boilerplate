@@ -3,11 +3,9 @@ import { PostService } from '@services/post.service';
 import { Post } from '@entities/post.entity';
 import { PostInput } from '@inputs/post.input';
 
-@Resolver()
+@Resolver(() => Post)
 export class PostResolver {
-  constructor(private readonly postService: PostService) {
-    this.postService = new PostService();
-  }
+  constructor(private readonly postService: PostService) {}
 
   @Query(() => [Post], { description: 'Get all posts' })
   public async posts(): Promise<Post[]> {

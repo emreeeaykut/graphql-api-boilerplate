@@ -1,3 +1,4 @@
+require('dotenv').config();
 import 'reflect-metadata';
 import express from 'express';
 import helmet from 'helmet';
@@ -8,50 +9,59 @@ import {
   ApolloServerPluginLandingPageDisabled,
   ApolloServerPluginLandingPageGraphQLPlayground
 } from 'apollo-server-core';
-import { createConnection } from 'typeorm';
+import { createConnection, useContainer } from 'typeorm';
 import schema from './resolvers';
 import { Logger } from './utils';
+import { Container } from 'typeorm-typedi-extensions';
 
-require('dotenv').config();
+useContainer(Container);
 
-(async () => {
-  await createConnection();
-    
+const bootstrap = async () => {
+  try {
+    await createConnection();
 
-  const port = process.env.PORT;
-  const host = process.env.HOST;
-  const app = express();
+    const port = process.env.PORT;
 
-  app.use(cors({ origin: true }));
+    const host = process.env.HOST;
 
-  app.use(helmet.xssFilter());
+    const app = express();
 
-  app.use(
-    compression({
-      filter: (req, res) => {
-        return true;
-      }
-    })
-  );
+    app.use(cors({ origin: true }));
 
-  app.use(express.json());
+    app.use(helmet.xssFilter());
 
-  const server = new ApolloServer({
-    schema: await schema(),
-    introspection: process.env.NODE_ENV !== 'production',
-    plugins: [
-      process.env.NODE_ENV === 'production'
-        ? ApolloServerPluginLandingPageDisabled()
-        : ApolloServerPluginLandingPageGraphQLPlayground()
-    ],
-    context: ({ req, res }) => ({ req, res })
-  });
+    app.use(
+      compression({
+        filter: (req, res) => {
+          return true;
+        }
+      })
+    );
 
-  await server.start();
+    app.use(express.json());
 
-  server.applyMiddleware({ app });
+    const server = new ApolloServer({
+      schema: await schema(),
+      introspection: process.env.NODE_ENV !== 'production',
+      plugins: [
+        process.env.NODE_ENV === 'production'
+          ? ApolloServerPluginLandingPageDisabled()
+          : ApolloServerPluginLandingPageGraphQLPlayground()
+      ],
 
-  app.listen(port);
+      context: ({ req, res }) => ({ req, res })
+    });
 
-  Logger.info(`GraphQL server is running on ${host}:${port}${server.graphqlPath}`);
-})();
+    await server.start();
+
+    server.applyMiddleware({ app });
+
+    app.listen(port);
+
+    Logger.info(`GraphQL server is running on ${host}:${port}${server.graphqlPath}`);
+  } catch (err) {
+    Logger.error(err);
+  }
+};
+
+bootstrap();

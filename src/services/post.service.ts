@@ -1,19 +1,16 @@
 import { Service } from 'typedi';
-import { DeleteResult, getRepository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Post } from '@entities/post.entity';
 import { PostRepository } from '@repositories/post.repository';
 
 @Service()
 export class PostService {
-  // constructor(@InjectRepository(PostRepository) private readonly postRepository: PostRepository) {}
-  public readonly postRepository: PostRepository;
+  constructor(
+    @InjectRepository(PostRepository)
+    private readonly postRepository: PostRepository
+  ) {}
 
-  constructor() {
-    this.postRepository = getRepository(Post);
-  }
-
-  public async getAll() {
+  public async getAll(): Promise<Post[]> {
     return await this.postRepository.find();
   }
 

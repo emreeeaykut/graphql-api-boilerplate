@@ -1,4 +1,5 @@
 import { buildSchema } from 'type-graphql';
+import { Container } from 'typeorm-typedi-extensions';
 import { PostResolver } from './post.resolver';
 
 export default async () => {
@@ -9,6 +10,7 @@ export default async () => {
       commentDescriptions: true,
       sortedSchema: false
     },
-    validate: true
+    validate: true,
+    container: Container
   });
 };

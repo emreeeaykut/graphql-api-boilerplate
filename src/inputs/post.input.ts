@@ -1,6 +1,6 @@
 import { InputType, Field } from 'type-graphql';
 import { Post } from '@entities/post.entity';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 
 @InputType({ description: 'Post input' })
 export class PostInput implements Partial<Post> {
