@@ -3,13 +3,20 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type Query {
-  # Get all posts
-  posts: [Post!]!
+# Base entity
+type BaseEntity {
+  # Created date
+  createdAt: Timestamp!
 
-  # Get post by id
-  post(id: Float!): Post!
+  # Last update date
+  updatedAt: Timestamp!
+
+  # Is active
+  isActive: Boolean!
 }
+
+# The javascript `Date` as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+scalar Timestamp
 
 # Post entity
 type Post {
@@ -35,20 +42,6 @@ type Post {
   content: String
 }
 
-# The javascript `Date` as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
-scalar Timestamp
-
-type Mutation {
-  # Create post
-  createPost(data: PostInput!): Post!
-
-  # Update post
-  updatePost(data: PostInput!, id: Float!): Post!
-
-  # Delete post
-  deletePost(id: Float!): Post!
-}
-
 # Post input
 input PostInput {
   # Post title
@@ -62,4 +55,23 @@ input PostInput {
 
   # Post is active
   isActive: Boolean
+}
+
+type Query {
+  # Get all posts
+  posts: [Post!]!
+
+  # Get post by id
+  post(id: Float!): Post!
+}
+
+type Mutation {
+  # Create post
+  createPost(data: PostInput!): Post!
+
+  # Update post
+  updatePost(data: PostInput!, id: Float!): Post!
+
+  # Delete post
+  deletePost(id: Float!): Post!
 }

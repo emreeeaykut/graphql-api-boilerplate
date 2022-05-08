@@ -10,14 +10,14 @@ import {
   ApolloServerPluginLandingPageGraphQLPlayground
 } from 'apollo-server-core';
 import { createConnection, useContainer } from 'typeorm';
-import schema from './resolvers';
 import { Logger } from './utils';
 import { Container } from 'typeorm-typedi-extensions';
-
-useContainer(Container);
+import { buildSchema } from 'type-graphql';
 
 const bootstrap = async () => {
   try {
+    useContainer(Container);
+
     await createConnection();
 
     const port = process.env.PORT;
@@ -40,8 +40,18 @@ const bootstrap = async () => {
 
     app.use(express.json());
 
+    const schema = await buildSchema({
+      resolvers: [`${__dirname}/resolvers/**/*.resolver.ts`],
+      emitSchemaFile: {
+        path: __dirname + '/schema/schema.gql',
+        commentDescriptions: true,
+        sortedSchema: false
+      },
+      container: Container
+    });
+
     const server = new ApolloServer({
-      schema: await schema(),
+      schema,
       introspection: process.env.NODE_ENV !== 'production',
       plugins: [
         process.env.NODE_ENV === 'production'
@@ -60,7 +70,7 @@ const bootstrap = async () => {
 
     Logger.info(`GraphQL server is running on ${host}:${port}${server.graphqlPath}`);
   } catch (err) {
-    Logger.error(err);
+    Logger.error('error: ', err);
   }
 };
 
