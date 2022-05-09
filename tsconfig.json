@@ -27,5 +27,7 @@
       "@services/*": ["src/services/*"],
       "@utils/*": ["src/utils/*"]
     }
-  }
+  },
+  "exclude": ["node_modules"],
+  "include": ["./src/**/*.ts", ".env"]
 }

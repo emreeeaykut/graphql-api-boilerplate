@@ -2,31 +2,32 @@ require('dotenv').config();
 import 'reflect-metadata';
 import express from 'express';
 import helmet from 'helmet';
-import cors from 'cors';
 import compression from 'compression';
+import common from '@config/common';
 import { ApolloServer } from 'apollo-server-express';
 import {
   ApolloServerPluginLandingPageDisabled,
   ApolloServerPluginLandingPageGraphQLPlayground
 } from 'apollo-server-core';
-import { createConnection, useContainer } from 'typeorm';
+import { useContainer } from 'typeorm';
 import { Logger } from './utils';
 import { Container } from 'typeorm-typedi-extensions';
 import { buildSchema } from 'type-graphql';
+import session from '@config/session';
+import cors from '@config/cors';
+import { databaseConnection } from '@config/database';
 
 const bootstrap = async () => {
   try {
-    useContainer(Container);
+    const port = common.port;
 
-    await createConnection();
-
-    const port = process.env.PORT;
-
-    const host = process.env.HOST;
+    const host = common.host;
 
     const app = express();
 
-    app.use(cors({ origin: true }));
+    app.use(cors);
+
+    app.use(session);
 
     app.use(helmet.xssFilter());
 
@@ -40,6 +41,10 @@ const bootstrap = async () => {
 
     app.use(express.json());
 
+    useContainer(Container);
+
+    await databaseConnection();
+
     const schema = await buildSchema({
       resolvers: [`${__dirname}/resolvers/**/*.resolver.ts`],
       emitSchemaFile: {
@@ -52,9 +57,9 @@ const bootstrap = async () => {
 
     const server = new ApolloServer({
       schema,
-      introspection: process.env.NODE_ENV !== 'production',
+      introspection: common.env !== 'production',
       plugins: [
-        process.env.NODE_ENV === 'production'
+        common.env === 'production'
           ? ApolloServerPluginLandingPageDisabled()
           : ApolloServerPluginLandingPageGraphQLPlayground()
       ],
