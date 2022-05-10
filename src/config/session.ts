@@ -7,7 +7,7 @@ const RedisStore = connectRedis(session);
 
 export default session({
   store: new RedisStore({
-    client: redis as any
+    client: redis
   }),
   name: 'qid',
   secret: 'keyboard cat',
