@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon -r tsconfig-paths/register src/index.ts --exec ts-node",
+    "dev": "nodemon -r tsconfig-paths/register src/app.ts --exec ts-node",
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "migration:new": "yarn run typeorm migration:create -n",
     "migration:generate": "yarn run typeorm migration:generate -n",
